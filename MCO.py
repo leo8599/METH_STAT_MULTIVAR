@@ -4,15 +4,11 @@ Spyder Editor
 
 This is a temporary script file.
 """
-
+#%%
 from pandas_datareader import data as pdr
 import yfinance as yf
 import seaborn as sns
->>> y_symbols = ['SPY','AMZN', 'A']
->>> from datetime import datetime
->>> startdate = datetime(2019,12,1)
->>> enddate = datetime(2022,12,15)
->>> data = yf.download(y_symbols, start=startdate, end=enddate)
+from datetime import datetime
 import matplotlib.pyplot as plt
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from arch import arch_model
@@ -23,18 +19,25 @@ import statsmodels.api as sm
 from statsmodels.stats.diagnostic import het_white
 from statsmodels.stats.stattools import jarque_bera
 from statsmodels.stats.stattools import durbin_watson
+#%%
+
+y_symbols = ['SPY','AMZN','AAPL']
+startdate = datetime(2020,12,1)
+enddate = datetime(2022,12,15)
+data = yf.download(y_symbols, start=startdate, end=enddate)
 
 returns = data.Close.pct_change().dropna()
 
-Z = returns[['SPY','AMZN']]  
+Z = returns[['SPY','AMZN','AAPL']]  
 # Compute correlation matrix
+#%%
 corr_matrix = Z.corr()
 
 plt.figure(figsize=(6,4))
 sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f")
 plt.title("Correlation Matrix")
 plt.show()
-
+#%%
 X1 = returns[['SPY']]
 Y1 = returns['AMZN']
 
@@ -84,3 +87,4 @@ p = np.poly1d(d)
 plt.plot(returns.AMZN, p(returns.AMZN), "r--")
 
 plt.show()
+# %%
